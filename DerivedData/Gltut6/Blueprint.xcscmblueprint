@@ -1,0 +1,113 @@
+{
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "AFEF78CDC0DFF37BD4F1C1AA99E1A93FDB3837FC" : 0,
+    "54E2EC3C07A084F927504E3CDF1F117FD850DFDE" : 0,
+    "ABB94A639E4973FDDC90037FC67938A83BE212BA" : 0,
+    "6A4491D1F0ECD02E333E7B2CE64BE8FFBDB3FBD6" : 0,
+    "9B12942FC29CD51C2A883AB5F916B448D3B4D32B" : 0,
+    "03B17B2706DF581A1430AF86774D1120A5C6D126" : 0,
+    "3B41C49FCE5616378AC23B3D318CF0807461C59B" : 0,
+    "C23BC4AF8D7F58B5CEB702A192732E0C1F4FA97A" : 0,
+    "56CA84D3247EC7BEB576A14DA51D7C44D7BCF646" : 0,
+    "9B8F86ADABCDBD0F88B6B3C86F57695DF9A38E21" : 0,
+    "A11FC425A4AACA429DECD08F312EA3A499A1A20C" : 0,
+    "ED79E586417690EB6C54F7BC52A58FBAE9DD05E5" : 0,
+    "C599BF8F7776B0E9F7449DB1E6BC266B02EC163D" : 0,
+    "F91C83320F37F82310E809029DB782035E5258C6" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5C183D90-3383-4FBD-AEA7-0FE088984C9F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "AFEF78CDC0DFF37BD4F1C1AA99E1A93FDB3837FC" : "..\/OpenGLStuff\/glmc",
+    "54E2EC3C07A084F927504E3CDF1F117FD850DFDE" : "GLtut5\/",
+    "ABB94A639E4973FDDC90037FC67938A83BE212BA" : "my-chip8\/",
+    "6A4491D1F0ECD02E333E7B2CE64BE8FFBDB3FBD6" : "BMP-Processor\/",
+    "9B12942FC29CD51C2A883AB5F916B448D3B4D32B" : "cglm\/",
+    "03B17B2706DF581A1430AF86774D1120A5C6D126" : "bmp-for-opengl\/",
+    "3B41C49FCE5616378AC23B3D318CF0807461C59B" : "gltut3\/",
+    "C23BC4AF8D7F58B5CEB702A192732E0C1F4FA97A" : "symmetric_encryption\/",
+    "56CA84D3247EC7BEB576A14DA51D7C44D7BCF646" : "..\/genreSelection",
+    "9B8F86ADABCDBD0F88B6B3C86F57695DF9A38E21" : "gltut4\/",
+    "A11FC425A4AACA429DECD08F312EA3A499A1A20C" : "..\/GoFish",
+    "ED79E586417690EB6C54F7BC52A58FBAE9DD05E5" : "Credit-card-calculator\/",
+    "C599BF8F7776B0E9F7449DB1E6BC266B02EC163D" : "..\/EnglishNumbers",
+    "F91C83320F37F82310E809029DB782035E5258C6" : "chip8GL\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Gltut6",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Gltut6.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/nikea1\/bmp-for-opengl.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "03B17B2706DF581A1430AF86774D1120A5C6D126"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/gltut3.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3B41C49FCE5616378AC23B3D318CF0807461C59B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/GLtut5.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "54E2EC3C07A084F927504E3CDF1F117FD850DFDE"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/genreSelection.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "56CA84D3247EC7BEB576A14DA51D7C44D7BCF646"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/BMP-Processor.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6A4491D1F0ECD02E333E7B2CE64BE8FFBDB3FBD6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:recp\/cglm.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9B12942FC29CD51C2A883AB5F916B448D3B4D32B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/gltut4.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9B8F86ADABCDBD0F88B6B3C86F57695DF9A38E21"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/GoFish.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A11FC425A4AACA429DECD08F312EA3A499A1A20C"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/my-chip8.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "ABB94A639E4973FDDC90037FC67938A83BE212BA"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/prdbrg\/glmc.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AFEF78CDC0DFF37BD4F1C1AA99E1A93FDB3837FC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/nikea1\/symmetrical_encryption.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C23BC4AF8D7F58B5CEB702A192732E0C1F4FA97A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/EnglishNumbers.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C599BF8F7776B0E9F7449DB1E6BC266B02EC163D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/Credit-card-calculator.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "ED79E586417690EB6C54F7BC52A58FBAE9DD05E5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git@github.com:nikea1\/xcode-chip8.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F91C83320F37F82310E809029DB782035E5258C6"
+    }
+  ]
+}
