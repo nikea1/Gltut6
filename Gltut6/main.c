@@ -27,6 +27,20 @@ void mat4Transpose(t_mat4 in, t_mat4 out);
 double toRadians(double degrees);
 void mat4Copy(t_mat4 in, t_mat4 out);
 void mat4DoubleToFloat(t_mat4 in, float* out);
+void vec3Add(t_vec3 v1, t_vec3 v2, t_vec3 out);
+void vec3Sub(t_vec3 v1, t_vec3 v2, t_vec3 out);
+void scalarMultVec3(double scalar, t_vec3 in, t_vec3 out);
+void vec3Copy(t_vec3 in, t_vec3 out);
+void vec3Print(t_vec3 in);
+
+void processInput(GLFWwindow *window);
+
+//Global camera
+t_vec3 cameraPos;
+t_vec3 cameraTarget;
+t_vec3 cameraFront;
+t_vec3 up;
+
 
 int main(int argc, const char * argv[]) {
     //------------------------------------
@@ -138,6 +152,10 @@ int main(int argc, const char * argv[]) {
         
     };
     
+    glmc_vec3(0.0, 0.0, 3.0, cameraPos);
+    glmc_vec3(0.0, 0.0, -1.0, cameraFront);
+    glmc_vec3(0.0, 1.0, 0.0, up);
+    
     glUseProgram(program);
     //--------------------------
     //Texture
@@ -219,32 +237,13 @@ int main(int argc, const char * argv[]) {
     
     
     t_vec4 frustrum; //FOV, Ascpect, Near, Far
-    t_vec3 trans; //translate model
     t_vec3 axis; //rotation axis
-    //camera
-    t_vec3 cameraPos;
-    t_vec3 cameraTarget;
-    t_vec3 cameraDirection;
-    t_vec3 cameraRight;
-    t_vec3 cameraUp;
-    t_vec3 up;
+   
     
     t_mat4 model;
     t_mat4 view;
     t_mat4 projection;
     t_mat4 temp;
-   
-    glmc_vec3(0.0, 0.0, 3.0, cameraPos);
-    glmc_vec3(0.0, 0.0, 0.0, cameraTarget);
-    glmc_sub_vec3(cameraPos, cameraTarget, cameraDirection);
-    glmc_normalize(cameraDirection);
-    
-    glmc_vec3(0.0, 1.0, 0.0, up);
-    glmc_cross(up, cameraDirection, cameraRight);
-    glmc_normalize(cameraRight);
-    
-    glmc_cross(cameraDirection, cameraRight, cameraUp);
-    glmc_normalize(cameraUp);
     
     //initialize matricies
     glmc_identity(view);
@@ -255,23 +254,15 @@ int main(int argc, const char * argv[]) {
     myPerspective(frustrum, projection);
     mat4DoubleToFloat(projection, m4_out);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, m4_out);
-    
-    //view
-    //glmc_vec3(0.0, 0.0, -3.0, trans);
-    //glmc_translate(view, trans, temp);
-    //mat4Copy(temp, view);
-    
-    //glmc_look_at(cameraPos, cameraTarget, up, view);
-    //mat4DoubleToFloat(view, m4_out);
-    //glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, m4_out);
 
-    
-    
     glEnable(GL_DEPTH_TEST);
     //--------------------------
     //While Loop
     //--------------------------
     while(!glfwWindowShouldClose(window)){
+        
+        
+        processInput(window);
         
         //clear screen
         glClearColor(0.0, 0.5, 1.0, 1.0);
@@ -285,13 +276,20 @@ int main(int argc, const char * argv[]) {
         
         //view matrix
         glmc_identity(view);
-        GLdouble radius = 10.0;
-        GLdouble camX = sin(glfwGetTime()) * radius;
-        GLdouble camZ = cos(glfwGetTime())* radius;
+        //GLdouble radius = 10.0;
+        //GLdouble camX = sin(glfwGetTime()) * radius;
+        //GLdouble camZ = cos(glfwGetTime())* radius;
         
-        glmc_vec3(camX, 0.0, camZ, cameraPos);
-        glmc_vec3(0.0, 0.0, 0.0, cameraTarget);
-        glmc_vec3(0.0, 1.0, 0.0, up);
+        //glmc_vec3(camX, 0.0, camZ, cameraPos);
+        //glmc_vec3(0.0, 0.0, 0.0, cameraTarget);
+        //glmc_vec3(0.0, 1.0, 0.0, up);
+        //glmc_look_at(cameraPos, cameraTarget, up, view);
+        
+        
+        vec3Add(cameraPos, cameraFront, cameraTarget);
+        
+        
+        
         glmc_look_at(cameraPos, cameraTarget, up, view);
         mat4DoubleToFloat(view, m4_out);
         glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, m4_out);
@@ -303,7 +301,7 @@ int main(int argc, const char * argv[]) {
             glmc_vec3(1.0, 0.3, 0.5, axis);
             double angle = 20 * i;
             if(i%3 == 0){
-                angle = 25.0 * glfwGetTime();
+                //angle = 25.0 * glfwGetTime();
             }
             
             glmc_rotate(temp, toRadians(angle), axis, model);
@@ -404,6 +402,72 @@ void myPerspective(t_vec4 frustum, t_mat4 dest)
     dest[10] = (frustum[NEAR] + frustum[FAR]) * fn;
     dest[11] = -1.0;
     dest[14] = 2.0 * fn * frustum[NEAR] * frustum[FAR];
+    
+}
+
+void vec3Add(t_vec3 v1, t_vec3 v2, t_vec3 out){
+    
+    for(int i = 0; i < 3; i++)
+        out[i] = v1[i] + v2[i];
+}
+
+void vec3Sub(t_vec3 v1, t_vec3 v2, t_vec3 out){
+    for(int i = 0; i < 3; i++)
+        out[i] = v1[i] - v2[i];
+}
+
+void scalarMultVec3(double scalar, t_vec3 in, t_vec3 out){
+    
+    for(int i=0; i<3; i++){
+        out[i] = scalar*in[i];
+    }
+}
+
+void vec3Copy(t_vec3 in, t_vec3 out){
+    for(int i=0; i<3; i++){
+        out[i] = in[i];
+    }
+}
+
+void vec3Print(t_vec3 in){
+    printf("X: %lf, Y: %lf, Z: %lf\n", in[0], in[1], in[2]);
+}
+
+void processInput(GLFWwindow *window){
+    double cameraSpeed = 0.05;
+    t_vec3 temp,temp2;
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+        printf("W\n");
+        scalarMultVec3(cameraSpeed, cameraFront, temp);
+        vec3Add(temp, cameraPos, temp2);
+        vec3Copy(temp2, cameraPos);
+        
+    }
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+        printf("S\n");
+        scalarMultVec3(cameraSpeed, cameraFront, temp);
+        vec3Sub(cameraPos,temp, temp2);
+        vec3Copy(temp2, cameraPos);
+    }
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+        
+        glmc_cross(up, cameraFront,temp);
+        glmc_normalize(temp);
+        scalarMultVec3(cameraSpeed, temp, temp2);
+        vec3Sub(cameraPos, temp2, temp);
+        vec3Copy(temp, cameraPos);
+        printf("A\n");
+    }
+    
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+        printf("D\n");
+        glmc_cross(up, cameraFront, temp);
+        glmc_normalize(temp);
+        scalarMultVec3(cameraSpeed, temp, temp2);
+        vec3Add(cameraPos, temp2, temp);
+        vec3Copy(temp, cameraPos);
+        
+    }
     
 }
 
