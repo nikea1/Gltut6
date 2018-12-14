@@ -21,6 +21,13 @@
 #define WINDOW_WIDTH 400
 #define WINDOW_HEIGHT 400
 
+void myPerspective(double*, double*);
+void zeroMat4(t_mat4 in);
+void mat4Transpose(t_mat4 in, t_mat4 out);
+double toRadians(double degrees);
+void mat4Copy(t_mat4 in, t_mat4 out);
+void mat4DoubleToFloat(t_mat4 in, float* out);
+
 int main(int argc, const char * argv[]) {
     //------------------------------------
     //Initialize GLFW and GLAD
@@ -131,14 +138,6 @@ int main(int argc, const char * argv[]) {
         
     };
     
-    GLfloat m4_out[16]; //float output to shaders
-    
-    t_mat4 model;
-    t_mat4 view;
-    t_mat4 projection;
-    t_mat4 temp;
-    t_mat4 camera;
-    
     glUseProgram(program);
     //--------------------------
     //Texture
@@ -212,21 +211,69 @@ int main(int argc, const char * argv[]) {
     glUniform1i(glGetUniformLocation(program, "tex0"), 0);
     glUniform1i(glGetUniformLocation(program, "tex1"), 1);
     
+    //-------------------------
+    //MVP Matrix
+    //-------------------------
+    GLfloat m4_out[16]; //float output to shaders
+    
+    t_vec4 frustrum; //FOV, Ascpect, Near, Far
+    t_vec3 trans;
+    t_vec3 axis;
+    
+    t_mat4 model;
+    t_mat4 view;
+    t_mat4 projection;
+    t_mat4 temp;
+    t_mat4 camera;
+    
+    //initialize matricies
+    
+    glmc_identity(view);
+    glmc_identity(projection);
+    
+    //projection
+    glmc_vec4(toRadians(45.0), (double)WINDOW_WIDTH/(double)WINDOW_HEIGHT, 0.1, 100.0, frustrum);
+    myPerspective(frustrum, projection);
+    mat4DoubleToFloat(projection, m4_out);
+    glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, m4_out);
+    
+    //view
+    glmc_vec3(0.0, 0.0, -3.0, trans);
+    glmc_translate(view, trans, temp);
+    mat4Copy(temp, view);
+    mat4DoubleToFloat(view, m4_out);
+    glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, m4_out);
+
+    
+    
     glEnable(GL_DEPTH_TEST);
     //--------------------------
     //While Loop
     //--------------------------
     while(!glfwWindowShouldClose(window)){
         
+        //clear screen
         glClearColor(0.0, 0.5, 1.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
         
+        //activate textures
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tex0);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, tex1);
         
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //Draw
+       // glDrawArrays(GL_TRIANGLES, 0, 36);
+        for(int i = 0; i < 10; i++){
+            //model
+            glmc_identity(model);
+            glmc_translate(model, cube_Positions[i], temp);
+            glmc_vec3(1.0, 0.5, 0.3, axis);
+            glmc_rotate(temp, (20*i), axis, model);
+            mat4DoubleToFloat(model, m4_out);
+            glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, m4_out);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
         
         glfwSwapBuffers(window);
         glfwPollEvents();
