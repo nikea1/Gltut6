@@ -37,15 +37,18 @@ void vec3Print(t_vec3 in);
 //Camera function
 void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void processInput(GLFWwindow *window);
+void scroll_callback(GLFWwindow *window, double xOffset, double yOffset);
 
 //Global camera
 t_vec3 cameraPos;
 t_vec3 cameraFront;
 t_vec3 up;
+double fov = 45.0;
 
 //delta time
 double deltaTime = 0;
 double lastTime = 0;
+
 //cursor init
 double lastX = WINDOW_WIDTH/2.0;
 double lastY = WINDOW_HEIGHT/2.0;
@@ -257,14 +260,14 @@ int main(int argc, const char * argv[]) {
     t_mat4 temp;
     
     //initialize matricies
-    glmc_identity(view);
-    glmc_identity(projection);
+    //glmc_identity(view);
+    //glmc_identity(projection);
     
     //projection
-    glmc_vec4(toRadians(45.0), (double)WINDOW_WIDTH/(double)WINDOW_HEIGHT, 0.1, 100.0, frustrum);
-    myPerspective(frustrum, projection);
-    mat4DoubleToFloat(projection, m4_out);
-    glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, m4_out);
+    //glmc_vec4(toRadians(45.0), (double)WINDOW_WIDTH/(double)WINDOW_HEIGHT, 0.1, 100.0, frustrum);
+    //myPerspective(frustrum, projection);
+    //mat4DoubleToFloat(projection, m4_out);
+    //glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, m4_out);
 
     
     
@@ -275,6 +278,7 @@ int main(int argc, const char * argv[]) {
     double currentFrame;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
     //--------------------------
     //While Loop
     //--------------------------
@@ -296,6 +300,13 @@ int main(int argc, const char * argv[]) {
         glBindTexture(GL_TEXTURE_2D, tex0);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, tex1);
+        
+        //projection
+        glmc_identity(projection);
+        glmc_vec4(toRadians(fov), (double)WINDOW_WIDTH/(double)WINDOW_HEIGHT, 0.1, 100.0, frustrum);
+        myPerspective(frustrum, projection);
+        mat4DoubleToFloat(projection, m4_out);
+        glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, m4_out);
         
         //view matrix
         glmc_identity(view);
@@ -495,6 +506,15 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos){
     front[Z] = cos(toRadians(pitch)) * sin(toRadians(yaw));
     glmc_normalize(front);
     vec3Copy(front, cameraFront);
+}
+
+void scroll_callback(GLFWwindow *window, double xOffset, double yOffset){
+    if(fov >= 1.0 && fov <= 45.0)
+        fov -= yOffset;
+    if(fov < 1.0)
+        fov = 1.0;
+    if(fov > 45.0)
+        fov = 45.0;
 }
 
 void processInput(GLFWwindow *window){
