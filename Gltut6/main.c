@@ -18,8 +18,8 @@
 
 #include <stdio.h>
 
-#define WINDOW_WIDTH 400
-#define WINDOW_HEIGHT 400
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 void myPerspective(double*, double*);
 void zeroMat4(t_mat4 in);
@@ -216,18 +216,37 @@ int main(int argc, const char * argv[]) {
     //-------------------------
     GLfloat m4_out[16]; //float output to shaders
     
+    
+    
     t_vec4 frustrum; //FOV, Ascpect, Near, Far
-    t_vec3 trans;
-    t_vec3 axis;
+    t_vec3 trans; //translate model
+    t_vec3 axis; //rotation axis
+    //camera
+    t_vec3 cameraPos;
+    t_vec3 cameraTarget;
+    t_vec3 cameraDirection;
+    t_vec3 cameraRight;
+    t_vec3 cameraUp;
+    t_vec3 up;
     
     t_mat4 model;
     t_mat4 view;
     t_mat4 projection;
     t_mat4 temp;
-    t_mat4 camera;
+   
+    glmc_vec3(0.0, 0.0, 3.0, cameraPos);
+    glmc_vec3(0.0, 0.0, 0.0, cameraTarget);
+    glmc_sub_vec3(cameraPos, cameraTarget, cameraDirection);
+    glmc_normalize(cameraDirection);
+    
+    glmc_vec3(0.0, 1.0, 0.0, up);
+    glmc_cross(up, cameraDirection, cameraRight);
+    glmc_normalize(cameraRight);
+    
+    glmc_cross(cameraDirection, cameraRight, cameraUp);
+    glmc_normalize(cameraUp);
     
     //initialize matricies
-    
     glmc_identity(view);
     glmc_identity(projection);
     
@@ -238,11 +257,13 @@ int main(int argc, const char * argv[]) {
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, m4_out);
     
     //view
-    glmc_vec3(0.0, 0.0, -3.0, trans);
-    glmc_translate(view, trans, temp);
-    mat4Copy(temp, view);
-    mat4DoubleToFloat(view, m4_out);
-    glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, m4_out);
+    //glmc_vec3(0.0, 0.0, -3.0, trans);
+    //glmc_translate(view, trans, temp);
+    //mat4Copy(temp, view);
+    
+    //glmc_look_at(cameraPos, cameraTarget, up, view);
+    //mat4DoubleToFloat(view, m4_out);
+    //glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, m4_out);
 
     
     
@@ -262,16 +283,34 @@ int main(int argc, const char * argv[]) {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, tex1);
         
-        //Draw
-       // glDrawArrays(GL_TRIANGLES, 0, 36);
+        //view matrix
+        glmc_identity(view);
+        GLdouble radius = 10.0;
+        GLdouble camX = sin(glfwGetTime()) * radius;
+        GLdouble camZ = cos(glfwGetTime())* radius;
+        
+        glmc_vec3(camX, 0.0, camZ, cameraPos);
+        glmc_vec3(0.0, 0.0, 0.0, cameraTarget);
+        glmc_vec3(0.0, 1.0, 0.0, up);
+        glmc_look_at(cameraPos, cameraTarget, up, view);
+        mat4DoubleToFloat(view, m4_out);
+        glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, m4_out);
+        
         for(int i = 0; i < 10; i++){
-            //model
+            //model matrix
             glmc_identity(model);
             glmc_translate(model, cube_Positions[i], temp);
-            glmc_vec3(1.0, 0.5, 0.3, axis);
-            glmc_rotate(temp, (20*i), axis, model);
+            glmc_vec3(1.0, 0.3, 0.5, axis);
+            double angle = 20 * i;
+            if(i%3 == 0){
+                angle = 25.0 * glfwGetTime();
+            }
+            
+            glmc_rotate(temp, toRadians(angle), axis, model);
             mat4DoubleToFloat(model, m4_out);
             glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, m4_out);
+            
+            //Draw
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
         
@@ -279,8 +318,6 @@ int main(int argc, const char * argv[]) {
         glfwPollEvents();
         
     }
-    
-    
     
     printf("Hello, World!\n");
     return 0;
