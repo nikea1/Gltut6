@@ -21,26 +21,37 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
+//TODO: Set these helper functions to a header
 void myPerspective(double*, double*);
-void zeroMat4(t_mat4 in);
+void mat4Zero(t_mat4 in);
 void mat4Transpose(t_mat4 in, t_mat4 out);
 double toRadians(double degrees);
 void mat4Copy(t_mat4 in, t_mat4 out);
 void mat4DoubleToFloat(t_mat4 in, float* out);
 void vec3Add(t_vec3 v1, t_vec3 v2, t_vec3 out);
 void vec3Sub(t_vec3 v1, t_vec3 v2, t_vec3 out);
-void scalarMultVec3(double scalar, t_vec3 in, t_vec3 out);
+void vec3ScalarMul(double scalar, t_vec3 in, t_vec3 out);
 void vec3Copy(t_vec3 in, t_vec3 out);
 void vec3Print(t_vec3 in);
 
+//Camera function
+void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void processInput(GLFWwindow *window);
 
 //Global camera
 t_vec3 cameraPos;
-t_vec3 cameraTarget;
 t_vec3 cameraFront;
 t_vec3 up;
 
+//delta time
+double deltaTime = 0;
+double lastTime = 0;
+//cursor init
+double lastX = WINDOW_WIDTH/2.0;
+double lastY = WINDOW_HEIGHT/2.0;
+double pitch = 0.0;
+double yaw = -90.0;
+int firstMouse = 1;
 
 int main(int argc, const char * argv[]) {
     //------------------------------------
@@ -151,7 +162,7 @@ int main(int argc, const char * argv[]) {
         {-1.3f,  1.0f, -1.5f},
         
     };
-    
+    t_vec3 cameraTarget;
     glmc_vec3(0.0, 0.0, 3.0, cameraPos);
     glmc_vec3(0.0, 0.0, -1.0, cameraFront);
     glmc_vec3(0.0, 1.0, 0.0, up);
@@ -230,7 +241,7 @@ int main(int argc, const char * argv[]) {
     glUniform1i(glGetUniformLocation(program, "tex1"), 1);
     
     //-------------------------
-    //MVP Matrix
+    //Projection Matrix
     //-------------------------
     GLfloat m4_out[16]; //float output to shaders
     
@@ -255,12 +266,24 @@ int main(int argc, const char * argv[]) {
     mat4DoubleToFloat(projection, m4_out);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, m4_out);
 
+    
+    
+    //--------------------------
+    //Config
+    //--------------------------
     glEnable(GL_DEPTH_TEST);
+    double currentFrame;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
     //--------------------------
     //While Loop
     //--------------------------
+    
     while(!glfwWindowShouldClose(window)){
         
+        currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastTime;
+        lastTime = currentFrame;
         
         processInput(window);
         
@@ -379,7 +402,7 @@ void mat4Transpose(t_mat4 in, t_mat4 out){
 }
 
 //zero out matrix
-void zeroMat4(t_mat4 in){
+void mat4Zero(t_mat4 in){
     for(int i = 0; i < 16; i++){
         in[i] = 0.0;
     }
@@ -393,7 +416,7 @@ void myPerspective(t_vec4 frustum, t_mat4 dest)
     // 8  9 10 11
     //12 13 14 15
     double f, fn;
-    zeroMat4(dest);
+    mat4Zero(dest);
     f = 1/tan(frustum[FOV]*0.5);
     fn = 1 / (frustum[NEAR]-frustum[FAR]);
     
@@ -416,7 +439,7 @@ void vec3Sub(t_vec3 v1, t_vec3 v2, t_vec3 out){
         out[i] = v1[i] - v2[i];
 }
 
-void scalarMultVec3(double scalar, t_vec3 in, t_vec3 out){
+void vec3ScalarMul(double scalar, t_vec3 in, t_vec3 out){
     
     for(int i=0; i<3; i++){
         out[i] = scalar*in[i];
@@ -433,19 +456,66 @@ void vec3Print(t_vec3 in){
     printf("X: %lf, Y: %lf, Z: %lf\n", in[0], in[1], in[2]);
 }
 
+void mouse_callback(GLFWwindow* window, double xPos, double yPos){
+    /*
+     1. Calculate the mouse's offset since the last frame.
+     2. Add the offset values to the camera's yaw and pitch values.
+     3. Add some constraints to the maximum/minimum pitch values
+     4. Calculate the direction vector
+     */
+    
+    if(firstMouse){
+        lastX = xPos;
+        lastY = yPos;
+        firstMouse = 0;
+    }
+    
+    double xOffset = xPos - lastX;
+    double yOffest = lastY - yPos;
+    lastX = xPos;
+    lastY = yPos;
+    
+    double sensativity = 0.05;
+    xOffset *= sensativity;
+    yOffest *= sensativity;
+    
+    yaw += xOffset;
+    pitch += yOffest;
+    
+    if(pitch > 89.0){
+        pitch = 89.0;
+    }
+    if(pitch < -89.0){
+        pitch = -89.0;
+    }
+    
+    t_vec3 front;
+    front[X] = cos(toRadians(pitch)) * cos(toRadians(yaw));
+    front[Y] = sin(toRadians(pitch));
+    front[Z] = cos(toRadians(pitch)) * sin(toRadians(yaw));
+    glmc_normalize(front);
+    vec3Copy(front, cameraFront);
+}
+
 void processInput(GLFWwindow *window){
-    double cameraSpeed = 0.05;
+    
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+        glfwSetWindowShouldClose(window, GL_TRUE);
+        return;
+    }
+    
+    double cameraSpeed = 2.5 * deltaTime;
     t_vec3 temp,temp2;
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         printf("W\n");
-        scalarMultVec3(cameraSpeed, cameraFront, temp);
+        vec3ScalarMul(cameraSpeed, cameraFront, temp);
         vec3Add(temp, cameraPos, temp2);
         vec3Copy(temp2, cameraPos);
         
     }
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         printf("S\n");
-        scalarMultVec3(cameraSpeed, cameraFront, temp);
+        vec3ScalarMul(cameraSpeed, cameraFront, temp);
         vec3Sub(cameraPos,temp, temp2);
         vec3Copy(temp2, cameraPos);
     }
@@ -453,8 +523,8 @@ void processInput(GLFWwindow *window){
         
         glmc_cross(up, cameraFront,temp);
         glmc_normalize(temp);
-        scalarMultVec3(cameraSpeed, temp, temp2);
-        vec3Sub(cameraPos, temp2, temp);
+        vec3ScalarMul(cameraSpeed, temp, temp2);
+        vec3Add(cameraPos, temp2, temp);
         vec3Copy(temp, cameraPos);
         printf("A\n");
     }
@@ -463,8 +533,8 @@ void processInput(GLFWwindow *window){
         printf("D\n");
         glmc_cross(up, cameraFront, temp);
         glmc_normalize(temp);
-        scalarMultVec3(cameraSpeed, temp, temp2);
-        vec3Add(cameraPos, temp2, temp);
+        vec3ScalarMul(cameraSpeed, temp, temp2);
+        vec3Sub(cameraPos, temp2, temp);
         vec3Copy(temp, cameraPos);
         
     }
