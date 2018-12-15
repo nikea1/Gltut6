@@ -72,6 +72,52 @@ void mat4Zero(t_mat4 in){
         in[i] = 0.0;
     }
 }
+
+void mat4CrossMat4(t_mat4 n, t_mat4 m, t_mat4 out){
+    /*
+     0  1  2  3   0  1  2  3
+     4  5  6  7   4  5  6  7
+     8  9 10 11   8  9 10 11
+     12 13 14 15  12 13 14 15
+     
+     
+     */
+    
+    out[0] = m[0]*n[0] + m[4]*n[1] + m[8]*n[2] + m[12]*n[3];
+    out[1] = m[1]*n[0] + m[5]*n[1] + m[9]*n[2] + m[13]*n[3];
+    out[2] = m[2]*n[0] + m[6]*n[1] + m[10]*n[2] + m[14]*n[3];
+    out[3] = m[3]*n[0] + m[7]*n[1] + m[11]*n[2] + m[15]*n[3];
+    out[4] = m[0]*n[4] + m[4]*n[5] + m[8]*n[6] + m[12]*n[7];
+    out[5] = m[1]*n[4] + m[5]*n[5] + m[9]*n[6] + m[13]*n[7];
+    out[6] = m[2]*n[4] + m[6]*n[5] + m[10]*n[6] + m[14]*n[7];
+    out[7] = m[3]*n[4] + m[7]*n[5] + m[11]*n[6] + m[15]*n[7];
+    out[8] = m[0]*n[8] + m[4]*n[9] + m[8]*n[10] + m[12]*n[11];
+    out[9] = m[1]*n[8] + m[5]*n[9] + m[9]*n[10] + m[13]*n[11];
+    out[10] = m[2]*n[8] + m[6]*n[9] + m[10]*n[10] + m[14]*n[11];
+    out[11] = m[3]*n[8] + m[7]*n[9] + m[11]*n[10] + m[15]*n[11];
+    out[12] = m[0]*n[12] + m[4]*n[13] + m[8]*n[14] + m[12]*n[15];
+    out[13] = m[1]*n[12] + m[5]*n[13] + m[9]*n[14] + m[13]*n[15];
+    out[14] = m[2]*n[12] + m[6]*n[13] + m[10]*n[14] + m[14]*n[15];
+    out[15] = m[3]*n[12] + m[7]*n[13] + m[11]*n[14] + m[15]*n[15];
+}
+void mat4Print(t_mat4 matrix){
+    int i;
+    for(i = 0; i < 16; i++){
+        //space out numbers incase of negative signs
+        if(matrix[i] >= 0){
+            printf(" ");
+        }
+        //print out data
+        printf("%.1f ", matrix[i]);
+        //makes a new row
+        if(i!=0 && i%4 == 3){
+            printf("\n");
+        }
+    }
+    printf("\n");
+}
+
+
 //my own perspective function
 void myPerspective(t_vec4 frustum, t_mat4 dest)
 {
@@ -130,4 +176,49 @@ void vec3Print(t_vec3 in){
     if(in == NULL)
         return;
     printf("X: %lf, Y: %lf, Z: %lf\n", in[0], in[1], in[2]);
+}
+
+void myLookAt(t_vec3 eye, t_vec3 target, t_vec3 worldUp, t_mat4 out){
+   
+    t_vec3 direction;
+    t_vec3 right;
+    t_vec3 up;
+    t_mat4 lookAt;
+    t_mat4 cameraPos;
+    
+    glmc_sub_vec3(eye, target, direction);
+    glmc_normalize(direction);
+    glmc_cross(worldUp, direction, right);
+    glmc_normalize(right);
+    glmc_cross(direction, right, up);
+    
+    lookAt[0] = right[0];
+    lookAt[1] = up[0];
+    lookAt[2] = direction[0];
+    lookAt[3] = 0;
+    
+    lookAt[4] = right[1];
+    lookAt[5] = up[1];
+    lookAt[6] = direction[1];
+    lookAt[7] = 0;
+    
+    lookAt[8] = right[2];
+    lookAt[9] = up[2];
+    lookAt[10] = direction[2];
+    lookAt[11] = 0;
+    
+    lookAt[12] = 0;
+    lookAt[13] = 0;
+    lookAt[14] = 0;
+    lookAt[15] = 1;
+    
+    
+    glmc_identity(cameraPos);
+    
+    cameraPos[12] = eye[0]*-1;
+    cameraPos[13] = eye[1]*-1;
+    cameraPos[14] = eye[2]*-1;
+    
+    
+    mat4CrossMat4(cameraPos, lookAt, out);
 }

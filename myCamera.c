@@ -72,7 +72,9 @@ void getViewMatrix(Camera* camera, t_mat4 output){
         target[i] = camera->position[i] + camera->front[i];
     }
     
-    glmc_look_at(camera->position, target, camera->worldUp, output);
+    //glmc_look_at(camera->position, target, camera->worldUp, output);
+    myLookAt(camera->position, target, camera->worldUp, output);
+
 }
 void processKeyBoard(Camera* camera, Directions dir, float deltaTime){
     
@@ -80,11 +82,14 @@ void processKeyBoard(Camera* camera, Directions dir, float deltaTime){
     t_vec3 temp, temp2;
     if(dir == FOREWARD){
         vec3ScalarMul(velocity, camera->front, temp);
+        //temp[Y] = 0.0;// This is my solution to prevent "flying" around space
         vec3Copy(camera->position, temp2);
         vec3Add(temp2, temp, camera->position);
+        
     }
     if(dir == BACKWARD){
         vec3ScalarMul(velocity, camera->front, temp);
+        //temp[Y] = 0.0;// This is my solution to prevent "flying" around space
         vec3Copy(camera->position, temp2);
         vec3Sub(temp2, temp, camera->position);
     }
@@ -98,6 +103,8 @@ void processKeyBoard(Camera* camera, Directions dir, float deltaTime){
         vec3Copy(camera->position, temp2);
         vec3Sub(temp2, temp, camera->position);
     }
+    
+    camera->position[Y] = 0.0;// This the tutorials solution to keeps camera at ground level
 }
 void processMouseMovement(Camera* camera, float xOffset, float yOffset, int contrainPitch){
     xOffset *= camera->mouseSensitivity;
