@@ -17,6 +17,8 @@
 		5256C67721BBC6CE0019C2B1 /* shader.c in Sources */ = {isa = PBXBuildFile; fileRef = 5256C67621BBC6CE0019C2B1 /* shader.c */; };
 		5256C67A21C33ED70019C2B1 /* vshader.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5256C67921C2D8B10019C2B1 /* vshader.vert */; };
 		5256C67B21C33EDC0019C2B1 /* fshader.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5256C67821C2D88D0019C2B1 /* fshader.frag */; };
+		5256C67E21C48AD80019C2B1 /* myCamera.c in Sources */ = {isa = PBXBuildFile; fileRef = 5256C67C21C48AD80019C2B1 /* myCamera.c */; };
+		5256C68121C499F40019C2B1 /* myGLMC.c in Sources */ = {isa = PBXBuildFile; fileRef = 5256C67F21C499F40019C2B1 /* myGLMC.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +51,10 @@
 		5256C67621BBC6CE0019C2B1 /* shader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = shader.c; path = ../../OpenGLStuff/shader.c; sourceTree = "<group>"; };
 		5256C67821C2D88D0019C2B1 /* fshader.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = fshader.frag; sourceTree = "<group>"; };
 		5256C67921C2D8B10019C2B1 /* vshader.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = vshader.vert; sourceTree = "<group>"; };
+		5256C67C21C48AD80019C2B1 /* myCamera.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = myCamera.c; sourceTree = "<group>"; };
+		5256C67D21C48AD80019C2B1 /* myCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = myCamera.h; sourceTree = "<group>"; };
+		5256C67F21C499F40019C2B1 /* myGLMC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = myGLMC.c; sourceTree = "<group>"; };
+		5256C68021C499F40019C2B1 /* myGLMC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = myGLMC.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +74,10 @@
 		5232603521AF4F2600C6F789 = {
 			isa = PBXGroup;
 			children = (
+				5256C67C21C48AD80019C2B1 /* myCamera.c */,
+				5256C67D21C48AD80019C2B1 /* myCamera.h */,
+				5256C67F21C499F40019C2B1 /* myGLMC.c */,
+				5256C68021C499F40019C2B1 /* myGLMC.h */,
 				5256C67821C2D88D0019C2B1 /* fshader.frag */,
 				5256C67921C2D8B10019C2B1 /* vshader.vert */,
 				5256C67621BBC6CE0019C2B1 /* shader.c */,
@@ -167,6 +177,8 @@
 			files = (
 				5256C67721BBC6CE0019C2B1 /* shader.c in Sources */,
 				5256C66F21BBC5910019C2B1 /* glad.c in Sources */,
+				5256C67E21C48AD80019C2B1 /* myCamera.c in Sources */,
+				5256C68121C499F40019C2B1 /* myGLMC.c in Sources */,
 				5232604221AF4F2800C6F789 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
